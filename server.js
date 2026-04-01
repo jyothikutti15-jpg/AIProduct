@@ -49,8 +49,19 @@ app.post("/api/webhooks/stripe", express.raw({ type: "application/json" }), (req
   res.json({ received: true });
 });
 
-app.use(express.static(path.join(__dirname, "public")));
+const publicDir = path.resolve(__dirname, "public");
+console.log("Serving static files from:", publicDir);
+console.log("Public dir exists:", fs.existsSync(publicDir));
+if (fs.existsSync(publicDir)) {
+  console.log("Public dir contents:", fs.readdirSync(publicDir));
+}
+app.use(express.static(publicDir, { index: "index.html" }));
 app.use(express.json({ limit: "5mb" }));
+
+// Explicit root fallback
+app.get("/", (req, res) => {
+  res.sendFile(path.join(publicDir, "index.html"));
+});
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // AUTH ROUTES
