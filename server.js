@@ -15,8 +15,8 @@ const { generateAnalysisDocx } = require("./lib/docx-export");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-const uploadsDir = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
+const uploadsDir = process.env.UPLOADS_PATH || path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
 const upload = multer({
   dest: uploadsDir,

@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: contractshield-ai
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    plan: starter
+    disk:
+      name: sqlite-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_PATH
+        value: /var/data/data.db
+      - key: UPLOADS_PATH
+        value: /var/data/uploads
+      - key: PORT
+        value: "3001"
+      - key: APP_URL
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: STRIPE_STARTER_PRICE_ID
+        sync: false
+      - key: STRIPE_PRO_PRICE_ID
+        sync: false
+      - key: STRIPE_ENTERPRISE_PRICE_ID
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
