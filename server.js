@@ -2293,6 +2293,19 @@ app.get("/for/:sector", (req, res) => {
 // ─── Deadline check interval (every hour) ─────────────────────────────────
 setInterval(() => { try { mailer.checkDeadlineAlerts(); } catch (e) { console.error("Deadline check error:", e); } }, 3600000);
 
+// ─── Keep alive ping (prevents Render free tier spin-down) ───────────────
+if (process.env.APP_URL) {
+  setInterval(() => {
+    const lib = process.env.APP_URL.startsWith("https") ? require("https") : require("http");
+    lib.get(process.env.APP_URL + "/api/clause-library", () => {}).on("error", () => {});
+  }, 10 * 60 * 1000); // Every 10 minutes
+}
+
+// ─── Health check endpoint ───────────────────────────────────────────────
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", uptime: process.uptime(), timestamp: new Date().toISOString() });
+});
+
 app.listen(PORT, () => {
   console.log(`ContractShield AI running at http://localhost:${PORT}`);
 });
